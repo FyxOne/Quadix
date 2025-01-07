@@ -19,7 +19,7 @@ bool Button::isMouseOver(const sf::Vector2i& mousePos) const {
     return shape.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos));
 }
 
-void runMainMenu(sf::RenderWindow& window, const sf::Texture& backgroundTexture, sf::Font& font) {
+int runMainMenu(sf::RenderWindow& window, const sf::Texture& backgroundTexture, const sf::Font& font) {
     sf::Sprite backgroundSprite(backgroundTexture);
 
     std::vector<Button> buttons;
@@ -58,4 +58,5 @@ void runMainMenu(sf::RenderWindow& window, const sf::Texture& backgroundTexture,
         }
         window.display();
     }
+    return 0;
 }
