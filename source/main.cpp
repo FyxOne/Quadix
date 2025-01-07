@@ -1,4 +1,6 @@
 #include "menu.h"
+#include "engine.h"
+#include <iostream> // Для std::cerr
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Main Menu", sf::Style::Close);
@@ -17,7 +19,17 @@ int main() {
         return -1;
     }
 
-    runMainMenu(window, backgroundTexture, font);
+    while (window.isOpen()) {
+        int menuAction = runMainMenu(window, backgroundTexture, font);
+
+        if (menuAction == 0) { // New Game
+            generateWorld(window); // Здесь просто вызов, без присваивания
+        }
+
+        if (menuAction == 3) { // Exit
+            window.close();
+        }
+    }
+
     return 0;
 }
-
