@@ -17,6 +17,6 @@ public:
 };
 
 // Функция для отображения главного меню
-void runMainMenu(sf::RenderWindow& window, const sf::Texture& backgroundTexture, sf::Font& font);
+int runMainMenu(sf::RenderWindow& window, const sf::Texture& backgroundTexture, const sf::Font& font);
 
 #endif // MENU_H
