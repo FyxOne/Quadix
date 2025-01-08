@@ -1,0 +1,23 @@
+1 VERSIONINFO
+FILEVERSION     1,0,0,0
+PRODUCTVERSION  1,0,0,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "080904E4"
+    BEGIN
+      VALUE "CompanyName", "HZ"
+      VALUE "FileDescription", "Quadix Game"
+      VALUE "FileVersion", "INDEV"
+      VALUE "InternalName", "Quadix"
+      VALUE "LegalCopyright", "FyxOne"
+      VALUE "OriginalFilename", "Quadix.exe"
+      VALUE "ProductName", "Quadix"
+      VALUE "ProductVersion", "INDEV"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x809, 1252
+  END
+END
