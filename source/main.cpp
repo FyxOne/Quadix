@@ -1,34 +1,93 @@
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <cmath> 
+
 #include "menu.h"
-#include "engine.h"
-#include <iostream> // Для std::cerr
+#include "world.hpp"
+
+static int game_state = 0;
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Main Menu", sf::Style::Close);
+    sf::Image logo;
+    logo.loadFromFile("resources/logo.png");
+
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Quadix", sf::Style::Close);
     window.setFramerateLimit(60);
+    window.setIcon(logo.getSize().x, logo.getSize().y, logo.getPixelsPtr());
 
     sf::Texture backgroundTexture;
-    if (!backgroundTexture.loadFromFile("resources/background.png")) {
-        std::cerr << "Error: Could not load resources/background.png" << std::endl;
-        return -1;
-    }
+    backgroundTexture.loadFromFile("resources/background.png");
     backgroundTexture.setSmooth(true);
 
-    sf::Font font;
-    if (!font.loadFromFile("resources/arial.ttf")) {
-        std::cerr << "Error: Could not load resources/arial.ttf" << std::endl;
-        return -1;
-    }
+    global_resources::initialize();
+    tile_textures::initialize();
+
+    Menu menu;
+    World world;
 
     while (window.isOpen()) {
-        int menuAction = runMainMenu(window, backgroundTexture, font);
+        sf::Event e;
+        if(window.pollEvent(e))
+        {
+            if(e.type == sf::Event::Closed)
+                window.close();
 
-        if (menuAction == 0) { // New Game
-            generateWorld(window); // Здесь просто вызов, без присваивания
+            if(game_state == 0)
+            {
+                int menu_ch = menu.button_events(e, window);
+
+                switch (menu_ch)
+                {
+                    case 1:
+                        game_state = 1;
+                        break;
+
+                    case 2:
+                        game_state = 2;
+                        break;
+
+                    case 3:
+                        game_state = 3;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
         }
 
-        if (menuAction == 3) { // Exit
-            window.close();
+        window.clear(sf::Color(135, 206, 235));
+
+        switch (game_state)
+        {
+            case 0:
+                window.draw(menu);
+                break;
+
+            case 1:
+                window.draw(world);
+
+                //std::cout << "Mouse position: " << world.mouse_on(window)[0] << " : " << world.mouse_on(window)[1] << std::endl;
+
+                if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                {
+                    world.replace_tile(world.mouse_on(window), TEXTURE_STONE);
+                }
+
+                if(sf::Mouse::isButtonPressed(sf::Mouse::Right))
+                {
+                    world.replace_tile(world.mouse_on(window), TEXTURE_AIR);
+                }
+
+                world.update();
+
+                break;
+
+            default:
+                break;
         }
+
+        window.display();
     }
 
     return 0;

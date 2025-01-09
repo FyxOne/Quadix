@@ -1,62 +1,75 @@
 #include "menu.h"
 
-Button::Button(const sf::Vector2f& size, const sf::Vector2f& position, const std::string& label, sf::Font& font, unsigned int charSize) {
-    shape.setSize(size);
-    shape.setPosition(position);
-    shape.setFillColor(sf::Color(100, 100, 200));
+static sf::Font font;
 
-    text.setFont(font);
-    text.setString(label);
-    text.setCharacterSize(charSize);
-    text.setFillColor(sf::Color::White);
-    text.setPosition(
-        position.x + (size.x - text.getGlobalBounds().width) / 2,
-        position.y + (size.y - text.getGlobalBounds().height) / 2
+Button::Button(sf::Vector2f size, sf::Color color, sf::Vector2f position, sf::String text)
+{
+    button_shape.setSize(size);
+    button_shape.setFillColor(color);
+    button_shape.setPosition(position);
+
+    button_text.setFont(font);
+    button_text.setString(text);
+    button_text.setCharacterSize(size.y/2);
+
+    button_text.setPosition(
+        position.x + (size.x - button_text.getGlobalBounds().width) / 2,
+        position.y + (size.y - button_text.getGlobalBounds().height) / 2
     );
 }
 
 bool Button::isMouseOver(const sf::Vector2i& mousePos) const {
-    return shape.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos));
+    return button_shape.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos));
 }
 
-int runMainMenu(sf::RenderWindow& window, const sf::Texture& backgroundTexture, const sf::Font& font) {
-    sf::Sprite backgroundSprite(backgroundTexture);
+void Button::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+    target.draw(button_shape);
+    target.draw(button_text);
+}
 
-    std::vector<Button> buttons;
-    buttons.emplace_back(sf::Vector2f(200, 50), sf::Vector2f(300, 200), "New Game", font, 24);
-    buttons.emplace_back(sf::Vector2f(200, 50), sf::Vector2f(300, 300), "Continue", font, 24);
-    buttons.emplace_back(sf::Vector2f(200, 50), sf::Vector2f(300, 400), "Settings", font, 24);
-    buttons.emplace_back(sf::Vector2f(200, 50), sf::Vector2f(300, 500), "Exit", font, 24);
+void global_resources::initialize()
+{
+    font.loadFromFile("resources/arial.ttf");
+}
 
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
+Menu::Menu()
+{
+    buttons.emplace_back(sf::Vector2f(200, 50), sf::Color(100, 100, 200), sf::Vector2f(1280/2-100, 200), "New Game");
+    buttons.emplace_back(sf::Vector2f(200, 50), sf::Color(100, 100, 200), sf::Vector2f(1280/2-100, 300), "Continue");
+    buttons.emplace_back(sf::Vector2f(200, 50), sf::Color(100, 100, 200), sf::Vector2f(1280/2-100, 400), "Settings");
+    buttons.emplace_back(sf::Vector2f(200, 50), sf::Color(100, 100, 200), sf::Vector2f(1280/2-100, 500), "Exit");
 
-            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-                sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                for (size_t i = 0; i < buttons.size(); ++i) {
-                    if (buttons[i].isMouseOver(mousePos)) {
-                        switch (i) {
-                        case 0: std::cout << "New Game clicked" << std::endl; break;
-                        case 1: std::cout << "Continue clicked" << std::endl; break;
-                        case 2: std::cout << "Settings clicked" << std::endl; break;
-                        case 3: window.close(); break;
-                        }
-                    }
+    backgroundTexture.loadFromFile("resources/background.png");
+    backgroundTexture.setSmooth(true);
+
+    backgroundSprite.setTexture(backgroundTexture);
+}
+
+int Menu::button_events(sf::Event &event, sf::RenderWindow& window)
+{
+    if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+        for (size_t i = 0; i < buttons.size(); ++i) {
+            if (buttons[i].isMouseOver(mousePos)) {
+                switch (i) {
+                    case 0: return 1;
+                    case 1: return 2;
+                    case 2: return 3;
+                    case 3: window.close(); break;
                 }
             }
         }
-
-        window.clear();
-        window.draw(backgroundSprite);
-        for (auto& button : buttons) {
-            window.draw(button.shape);
-            window.draw(button.text);
-        }
-        window.display();
     }
+
     return 0;
+}
+
+void Menu::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+    target.draw(backgroundSprite);
+
+    for (auto& button : buttons) {
+        target.draw(button);
+    }
 }
