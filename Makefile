@@ -1,5 +1,5 @@
 CXX := g++
-CXXFLAGS := -std=c++17 -Ilibs/include -Wall -Wextra -g -DSFML_STATIC
+CXXFLAGS := -Ilibs/include -Wall -Wextra -g -DSFML_STATIC
 LDFLAGS := -Llibs/lib -lsfml-graphics-s -lsfml-window-s -lsfml-system-s -lopengl32 -lfreetype -lwinmm -lgdi32 -lws2_32
 
 SRC_DIR := source

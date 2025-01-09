@@ -35,10 +35,10 @@ void global_resources::initialize()
 
 Menu::Menu()
 {
-    buttons.emplace_back(sf::Vector2f(200, 50), sf::Color(100, 100, 200), sf::Vector2f(300, 200), "New Game");
-    buttons.emplace_back(sf::Vector2f(200, 50), sf::Color(100, 100, 200), sf::Vector2f(300, 300), "Continue");
-    buttons.emplace_back(sf::Vector2f(200, 50), sf::Color(100, 100, 200), sf::Vector2f(300, 400), "Settings");
-    buttons.emplace_back(sf::Vector2f(200, 50), sf::Color(100, 100, 200), sf::Vector2f(300, 500), "Exit");
+    buttons.emplace_back(sf::Vector2f(200, 50), sf::Color(100, 100, 200), sf::Vector2f(1280/2-100, 200), "New Game");
+    buttons.emplace_back(sf::Vector2f(200, 50), sf::Color(100, 100, 200), sf::Vector2f(1280/2-100, 300), "Continue");
+    buttons.emplace_back(sf::Vector2f(200, 50), sf::Color(100, 100, 200), sf::Vector2f(1280/2-100, 400), "Settings");
+    buttons.emplace_back(sf::Vector2f(200, 50), sf::Color(100, 100, 200), sf::Vector2f(1280/2-100, 500), "Exit");
 
     backgroundTexture.loadFromFile("resources/background.png");
     backgroundTexture.setSmooth(true);
