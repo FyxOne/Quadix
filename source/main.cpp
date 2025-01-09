@@ -32,35 +32,28 @@ int main() {
             if(e.type == sf::Event::Closed)
                 window.close();
 
-            int menu_ch = menu.button_events(e, window);
-
-            switch (menu_ch)
+            if(game_state == 0)
             {
-                case 1:
-                    game_state = 1;
-                    break;
-    
-                case 2:
-                    game_state = 2;
-                    break;
-    
-                case 3:
-                    game_state = 3;
-                    break;
-    
-                default:
-                    break;
+                int menu_ch = menu.button_events(e, window);
+
+                switch (menu_ch)
+                {
+                    case 1:
+                        game_state = 1;
+                        break;
+
+                    case 2:
+                        game_state = 2;
+                        break;
+
+                    case 3:
+                        game_state = 3;
+                        break;
+
+                    default:
+                        break;
+                }
             }
-        }
-
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        {
-            world.set_position(-2, 0);
-        }
-
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-        {
-            world.set_position(2, 0);
         }
 
         window.clear(sf::Color(135, 206, 235));
@@ -73,6 +66,21 @@ int main() {
 
             case 1:
                 window.draw(world);
+
+                //std::cout << "Mouse position: " << world.mouse_on(window)[0] << " : " << world.mouse_on(window)[1] << std::endl;
+
+                if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                {
+                    world.replace_tile(world.mouse_on(window), TEXTURE_STONE);
+                }
+
+                if(sf::Mouse::isButtonPressed(sf::Mouse::Right))
+                {
+                    world.replace_tile(world.mouse_on(window), TEXTURE_AIR);
+                }
+
+                world.update();
+
                 break;
 
             default:
