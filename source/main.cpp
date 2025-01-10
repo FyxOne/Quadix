@@ -4,6 +4,8 @@
 
 #include "menu.h"
 #include "world.hpp"
+#include "stats.hpp"
+#include "hotbar.h"
 
 static int game_state = 0;
 
@@ -21,23 +23,23 @@ int main() {
 
     global_resources::initialize();
     tile_textures::initialize();
+    stats_resources::initialize();
 
     Menu menu;
     World world;
+    FpsCounter fpscounter;
+    Hotbar hotbar;
 
     while (window.isOpen()) {
         sf::Event e;
-        if(window.pollEvent(e))
-        {
-            if(e.type == sf::Event::Closed)
+        while (window.pollEvent(e)) {  // Цикл обработки всех событий
+            if (e.type == sf::Event::Closed)
                 window.close();
 
-            if(game_state == 0)
-            {
+            if (game_state == 0) {
                 int menu_ch = menu.button_events(e, window);
 
-                switch (menu_ch)
-                {
+                switch (menu_ch) {
                     case 1:
                         game_state = 1;
                         break;
@@ -54,12 +56,19 @@ int main() {
                         break;
                 }
             }
+
+            // Обработка прокрутки колеса мыши для управления хотбаром
+            if (game_state == 1) {
+                if (e.type == sf::Event::MouseWheelScrolled) {
+                    hotbar.handleScroll(e.mouseWheelScroll.delta > 0 ? -1 : 1);
+                    std::cout << "MouseWheelScrolled delta: " << e.mouseWheelScroll.delta << std::endl;
+                }
+            }
         }
 
         window.clear(sf::Color(135, 206, 235));
 
-        switch (game_state)
-        {
+        switch (game_state) {
             case 0:
                 window.draw(menu);
                 break;
@@ -69,15 +78,15 @@ int main() {
 
                 //std::cout << "Mouse position: " << world.mouse_on(window)[0] << " : " << world.mouse_on(window)[1] << std::endl;
 
-                if(sf::Mouse::isButtonPressed(sf::Mouse::Left))
-                {
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                     world.replace_tile(world.mouse_on(window), TEXTURE_STONE);
                 }
 
-                if(sf::Mouse::isButtonPressed(sf::Mouse::Right))
-                {
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
                     world.replace_tile(world.mouse_on(window), TEXTURE_AIR);
                 }
+
+                window.draw(hotbar); // Рисуем хотбар
 
                 world.update();
 
@@ -86,6 +95,9 @@ int main() {
             default:
                 break;
         }
+
+        fpscounter.update();
+        window.draw(fpscounter);
 
         window.display();
     }
