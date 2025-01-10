@@ -35,7 +35,7 @@ void World::generate_test_flat_world()
                 world_map[height][width] = TEXTURE_DIRT;
             }
 
-            // shit happens sometimes again x3
+            // shit
             else if(height >= 14)
             {
                 world_map[height][width] = TEXTURE_STONE;
