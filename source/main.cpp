@@ -11,7 +11,7 @@ int main() {
     sf::Image logo;
     logo.loadFromFile("resources/logo.png");
 
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Quadix", sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Quadix XDDDDDDDDDDD", sf::Style::Close);
     window.setFramerateLimit(60);
     window.setIcon(logo.getSize().x, logo.getSize().y, logo.getPixelsPtr());
 
